@@ -1,0 +1,27 @@
+{
+  "name": "task_1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "client.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node client.js",
+    "dev": "ts-node client.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulolopestech/trivia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paulolopestech/trivia/issues"
+  },
+  "homepage": "https://github.com/paulolopestech/trivia#readme",
+  "dependencies": {
+    "@types/ws": "^8.5.5",
+    "ts-node": "^10.9.1",
+    "ws": "^8.13.0"
+  }
+}

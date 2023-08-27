@@ -18,6 +18,7 @@ export class DataBaseSqlClient {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+        primaryKey: true,
       },
       answer: {
         type: DataTypes.STRING,
@@ -47,13 +48,54 @@ export class DataBaseSqlClient {
     const getExample = await this.questionsTable.findAll();
   }
 
-  static async getQuestion() {
+  static async getRandomQuestion() {
     await this.database.sync();
-    const getExample = await this.questionsTable.findOne({
-      order: Sequelize.random(),
+    const selectedColumns = ["question", "answer", "alternatives"];
+    const query = `
+      SELECT ${selectedColumns.join(", ")}
+      FROM "questions"
+      ORDER BY RANDOM()
+      LIMIT 1;
+    `;
+    const randomQuestion = await this.database.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
     });
-    console.log("GET EX:", getExample);
-    return getExample;
+
+    return randomQuestion;
+  }
+
+  static async populateDB() {
+    try {
+      const results: any = [];
+
+      fs.createReadStream("./dataset/dataset.csv")
+        .pipe(csv())
+        .on("data", (row: any) => {
+          const jsonString = row.choices
+            .replace(/'/g, '"')
+            .replace(/array\(/g, "[")
+            .replace(/dtype=object\)/g, "]")
+            .replace(/\],\s+/g, "], ")
+            .replace(/,\s+\]/g, "]");
+          const jsonObject = JSON.parse(jsonString);
+          for (const key in jsonObject) {
+            if (Array.isArray(jsonObject[key][0])) {
+              jsonObject[key] = jsonObject[key][0];
+            }
+          }
+          const register = {
+            answer: row.answerKey,
+            question: row.question,
+            alternatives: jsonObject.text,
+          };
+          results.push(register);
+        })
+        .on("end", async () => {
+          await DataBaseSqlClient.insertMultipleQuestions(results);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   static async initDataBase() {
@@ -64,43 +106,11 @@ export class DataBaseSqlClient {
       });
       await this.database.authenticate();
       await this.createQuestionsTable();
-      return this.database;
+      // await this.populateDB();
+      // return this.database;
     } catch (e) {
       console.log("ERROR", e);
       return { error: `Database connection error, ${e}`, statusCode: 500 };
     }
   }
 }
-
-(async () => {
-  await DataBaseSqlClient.initDataBase();
-  await DataBaseSqlClient.createQuestionsTable();
-
-  const results: any = [];
-
-  fs.createReadStream("./dataset/dataset.csv")
-    .pipe(csv())
-    .on("data", (row: any) => {
-      const jsonString = row.choices
-        .replace(/'/g, '"')
-        .replace(/array\(/g, "[")
-        .replace(/dtype=object\)/g, "]")
-        .replace(/\],\s+/g, "], ")
-        .replace(/,\s+\]/g, "]");
-      const jsonObject = JSON.parse(jsonString);
-      for (const key in jsonObject) {
-        if (Array.isArray(jsonObject[key][0])) {
-          jsonObject[key] = jsonObject[key][0];
-        }
-      }
-      const register = {
-        answer: row.answerKey,
-        question: row.question,
-        alternatives: jsonObject.text,
-      };
-      results.push(register);
-    })
-    .on("end", async () => {
-      await DataBaseSqlClient.insertMultipleQuestions(results);
-    });
-})();

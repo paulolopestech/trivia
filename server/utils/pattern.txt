@@ -1,0 +1,16 @@
+{'label': array(['A', 'B', 'C', 'D', 'E'], dtype=object), 'text': array(['bank', 'library', 'department store', 'mall', 'new york'],
+      dtype=object)}
+
+
+
+https://www.kaggle.com/datasets/thedevastator/new-commonsenseqa-dataset-for-multiple-choice-qu?resource=download
+
+
+
+{
+  answerKey: 'E',
+  question: 'It was a long trip from the farm, so he stayed in a hotel when he arrived at the what?',
+  choices: "{'label': array(['A', 'B', 'C', 'D', 'E'], dtype=object), 
+  'text': array(['bed away from home', 'wwii bunker', 'resort', 'las vegas', 'city'],\n" +
+    '      dtype=object)}'
+},
