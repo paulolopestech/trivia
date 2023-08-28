@@ -1,5 +1,5 @@
 {
-  "name": "task_1",
+  "name": "trivia_server",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,7 +9,7 @@
     "dev": "ts-node server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "paulolopestech",
   "license": "ISC",
   "dependencies": {
     "@types/ws": "^8.5.5",

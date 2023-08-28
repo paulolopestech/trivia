@@ -33,19 +33,9 @@ export class DataBaseSqlClient {
     await this.questionsTable.sync();
   }
 
-  static async insertQuestion(data: any) {
-    await this.database.sync();
-    const insertedData = await this.questionsTable.create({ ...data });
-  }
-
   static async insertMultipleQuestions(data: any) {
     await this.database.sync();
     const insertMultipleData = await this.questionsTable.bulkCreate(data);
-  }
-
-  static async getAllquestions() {
-    await this.database.sync();
-    const getExample = await this.questionsTable.findAll();
   }
 
   static async getRandomQuestion() {
@@ -106,8 +96,6 @@ export class DataBaseSqlClient {
       });
       await this.database.authenticate();
       await this.createQuestionsTable();
-      // await this.populateDB();
-      // return this.database;
     } catch (e) {
       console.log("ERROR", e);
       return { error: `Database connection error, ${e}`, statusCode: 500 };

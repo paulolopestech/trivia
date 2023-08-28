@@ -19,7 +19,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port that the server will listen on
-#EXPOSE 8080
+EXPOSE 8080
 
 # Command to run your TypeScript server
 CMD [ "node", "server.js" ]
