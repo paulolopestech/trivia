@@ -8,4 +8,4 @@ Application developed during a task of discipline C115, from the National Teleco
 
 The following image shows the application architecture:
 
-![Trivia](docs/TRIVIA.svg)
+![Trivia](docs/TRIVIA.png)
